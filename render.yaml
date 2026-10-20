@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: backroom
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL
+        sync: false        # paste your Neon connection string in the dashboard
+      - key: SALT
+        generateValue: true
