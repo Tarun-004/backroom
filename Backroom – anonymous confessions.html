@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Backroom – say it, nobody knows it’s you</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Figtree:wght@400;500;700&family=Young+Serif&display=swap">
+<style>
+:root{
+  --wall:#d9e2e6; --wall2:#cbd7dc; --ink:#1d2742; --soft:#56627c; --paper:#fbfaf6; --line:#1d274255;
+  --n-late:#c9d6f2; --n-work:#f2e4a4; --n-crush:#f4c8cf; --n-fam:#cfe5cc; --n-wins:#f6d9a8; --n-camp:#dccdf0;
+  --pen:#2b4fd8; --stamp:#b3261e;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --wall:#1b2233; --wall2:#232b40; --ink:#ecebe4; --soft:#9ba5bd; --paper:#2a3248; --line:#ecebe455;
+  --n-late:#3a4a76; --n-work:#6b5f2c; --n-crush:#6e3b48; --n-fam:#3b5a3d; --n-wins:#70522a; --n-camp:#53427a; --pen:#8fa8ff; --stamp:#ff8a80;}}
+:root[data-theme="dark"]{
+  --wall:#1b2233; --wall2:#232b40; --ink:#ecebe4; --soft:#9ba5bd; --paper:#2a3248; --line:#ecebe455;
+  --n-late:#3a4a76; --n-work:#6b5f2c; --n-crush:#6e3b48; --n-fam:#3b5a3d; --n-wins:#70522a; --n-camp:#53427a; --pen:#8fa8ff; --stamp:#ff8a80;}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--wall);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif;
+  background-image:radial-gradient(var(--wall2) 1.2px,transparent 1.3px);background-size:22px 22px;min-height:100vh}
+button,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2.5px solid var(--pen);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding:22px 18px 60px;display:grid;grid-template-columns:210px 1fr;gap:26px}
+header{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font:400 2.1rem/1 'Young Serif',Georgia,serif;margin:0;letter-spacing:-.01em}
+header p{margin:0;color:var(--soft);font-family:Caveat,cursive;font-size:1.35rem}
+aside{align-self:start;position:sticky;top:16px}
+aside h2{font:400 1.05rem 'Young Serif',serif;margin:0 0 8px}
+.rooms{display:flex;flex-direction:column;gap:6px}
+.room{display:flex;align-items:center;gap:8px;background:none;border:0;padding:7px 8px;border-radius:6px;text-align:left;width:100%}
+.room:hover{background:var(--wall2)}
+.room[aria-pressed=true]{background:var(--paper);box-shadow:2px 2px 0 var(--line);font-weight:700}
+.sw{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--ink);flex:none;transform:rotate(-6deg)}
+.room small{margin-left:auto;color:var(--soft)}
+.join{font-size:.8rem;border:1.5px solid var(--ink);background:none;border-radius:99px;padding:1px 9px;margin-left:6px}
+.join[aria-pressed=true]{background:var(--ink);color:var(--wall)}
+.row2{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.row2 .room{flex:1}
+.side-note{font-family:Caveat,cursive;font-size:1.2rem;color:var(--soft);margin-top:16px;line-height:1.2}
+.compose{background:var(--paper);border:1.5px solid var(--ink);border-radius:3px 12px 4px 10px;padding:14px 16px 12px;box-shadow:4px 4px 0 var(--line);margin-bottom:22px;transform:rotate(-.3deg)}
+.compose textarea{width:100%;border:0;background:none;resize:none;font:500 1.45rem/1.25 Caveat,cursive;min-height:84px;padding:0}
+.compose textarea:focus-visible{outline:none}
+.compose .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1.5px dashed var(--line);padding-top:10px}
+.who{font-family:Caveat,cursive;font-size:1.2rem;color:var(--soft);margin-right:auto}
+.who b{color:var(--pen);font-weight:700}
+select{background:var(--paper);border:1.5px solid var(--ink);border-radius:6px;padding:5px 8px}
+.pin{background:var(--ink);color:var(--wall);border:0;border-radius:6px;padding:7px 16px;font-weight:700}
+.pin:disabled{opacity:.35;cursor:not-allowed}
+.count{color:var(--soft);font-size:.85rem}
+.tools{display:flex;gap:8px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
+.tab{background:none;border:0;border-bottom:2.5px solid transparent;padding:3px 2px;margin-right:10px;color:var(--soft)}
+.tab[aria-pressed=true]{color:var(--ink);border-color:var(--pen);font-weight:700}
+.tools label{margin-left:auto;font-size:.9rem;display:flex;gap:6px;align-items:center;cursor:pointer}
+.board{columns:2 290px;column-gap:22px}
+.note{break-inside:avoid;margin:0 0 24px;padding:20px 18px 12px;position:relative;background:var(--c);border-radius:2px 2px 14px 2px;
+  box-shadow:2px 3px 0 var(--line);transform:rotate(var(--r))}
+.note::before{content:"";position:absolute;top:-7px;left:50%;width:15px;height:15px;margin-left:-7px;border-radius:50%;background:var(--stamp);border:2px solid var(--ink)}
+.note.mine{outline:2px dashed var(--pen);outline-offset:3px}
+.meta{display:flex;gap:8px;font-size:.82rem;color:var(--soft);align-items:baseline}
+.meta b{font:700 1.15rem Caveat,cursive;color:var(--ink)}
+.meta .tag{margin-left:auto;border:1.5px solid var(--ink);border-radius:4px;padding:0 6px;color:var(--ink);transform:rotate(2deg)}
+.note p{font:500 1.5rem/1.2 Caveat,cursive;margin:8px 0 12px;white-space:pre-wrap;word-wrap:break-word}
+.react{display:flex;gap:6px;flex-wrap:wrap}
+.react button{background:#ffffff40;border:1.5px solid var(--line);border-radius:99px;padding:1px 10px;font-size:.86rem;transition:transform .12s}
+.react button:hover{border-color:var(--ink)}
+.react button:active{transform:scale(.92)}
+.react button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.react .talk{margin-left:auto}
+.thread{margin-top:10px;border-top:1.5px dashed var(--line);padding-top:8px}
+.cm{font-size:.92rem;margin:0 0 6px}
+.cm b{font:700 1.05rem Caveat,cursive;margin-right:6px}
+.thread form{display:flex;gap:6px;margin-top:6px}
+.thread input{flex:1;min-width:0;border:1.5px solid var(--line);background:#ffffff55;border-radius:6px;padding:4px 8px;font:inherit;color:inherit}
+.thread button{border:1.5px solid var(--ink);background:none;border-radius:6px;padding:3px 10px}
+.empty{font:1.6rem Caveat,cursive;color:var(--soft);padding:30px 0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--ink);color:var(--wall);padding:8px 16px;border-radius:8px;opacity:0;transition:.25s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.drop{animation:drop .5s cubic-bezier(.3,1.5,.5,1)}
+@keyframes drop{from{transform:translateY(-40px) rotate(-5deg);opacity:0}}
+@media (max-width:760px){
+  .wrap{grid-template-columns:1fr;gap:14px}
+  aside{position:static}
+  .rooms{flex-direction:row;overflow-x:auto;padding-bottom:6px}
+  .row2{flex:none}.room{white-space:nowrap}
+  .side-note,aside h2{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>Backroom</h1><p>say it here. nobody will know it’s you.</p></header>
+  <aside>
+    <h2>Rooms</h2>
+    <div class="rooms" id="rooms"></div>
+    <p class="side-note">Join a room to see its notes in “My rooms”. Your name changes every visit.</p>
+  </aside>
+  <main>
+    <section class="compose">
+      <textarea id="txt" maxlength="280" placeholder="What’s been sitting on your chest?" aria-label="Write a confession"></textarea>
+      <div class="bar">
+        <span class="who">pinning as <b id="alias"></b></span>
+        <span class="count" id="cnt">0/280</span>
+        <select id="room" aria-label="Choose a room"></select>
+        <button class="pin" id="pin" disabled>Pin it</button>
+      </div>
+    </section>
+    <div class="tools">
+      <button class="tab" data-s="new" aria-pressed="true">Newest</button>
+      <button class="tab" data-s="top" aria-pressed="false">Most felt</button>
+      <label><input type="checkbox" id="mineOnly"> My rooms only</label>
+    </div>
+    <div class="board" id="board"></div>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function(){
+var ROOMS=[
+ {id:'late',n:'Late nights',c:'--n-late'},{id:'work',n:'Work & money',c:'--n-work'},
+ {id:'crush',n:'Crushes',c:'--n-crush'},{id:'fam',n:'Family',c:'--n-fam'},
+ {id:'wins',n:'Small wins',c:'--n-wins'},{id:'camp',n:'Campus',c:'--n-camp'}];
+var KINDS=[['me','me too'],['hug','hug'],['ouch','ouch'],['haha','haha']];
+var A1=['Quiet','Sleepy','Borrowed','Paper','Midnight','Soft','Rusty','Lost','Tiny','Wandering'];
+var A2=['Heron','Teapot','Moth','Lantern','Pigeon','Biscuit','Comet','Otter','Kettle','Fern'];
+var H=3600e3,now=Date.now();
+var seed=[
+ {id:'s1',room:'late',a:'Quiet Heron',t:now-1*H,text:'I still keep the voicemail from my grandmother. I play it when the house is quiet. She just says "call me back when you can."',r:{me:41,hug:63,ouch:9,haha:0},c:[{a:'Soft Moth',x:'Keep it. Back it up somewhere too.'}]},
+ {id:'s2',room:'work',a:'Rusty Kettle',t:now-3*H,text:'I have been "in a meeting" for two hours. I am watching videos of people restoring old knives.',r:{me:88,hug:2,ouch:0,haha:57},c:[]},
+ {id:'s3',room:'crush',a:'Tiny Comet',t:now-5*H,text:'Told her I liked her playlist. I made the playlist. I made it for her. She has no idea.',r:{me:30,hug:12,ouch:4,haha:21},c:[{a:'Lost Otter',x:'Send her the next one with your name on it.'}]},
+ {id:'s4',room:'wins',a:'Sleepy Fern',t:now-8*H,text:'Made my bed, ate a real breakfast, and answered the email I’d been avoiding for nine days. Small. But it’s mine.',r:{me:20,hug:74,ouch:0,haha:1},c:[]},
+ {id:'s5',room:'fam',a:'Borrowed Lantern',t:now-20*H,text:'Dad asked if I’m happy and I said "yeah, totally" and we both went back to watching the match.',r:{me:112,hug:48,ouch:31,haha:3},c:[]},
+ {id:'s6',room:'camp',a:'Paper Pigeon',t:now-26*H,text:'I’ve been eating lunch in the library stairwell for a month so nobody notices I don’t have anyone to sit with.',r:{me:96,hug:130,ouch:22,haha:0},c:[{a:'Wandering Biscuit',x:'Second floor, the one by the vending machine. Hi.'}]},
+ {id:'s7',room:'work',a:'Midnight Teapot',t:now-30*H,text:'Promoted last week. Spent the evening googling whether I’m allowed to feel like a fraud about it.',r:{me:77,hug:19,ouch:3,haha:14},c:[]}
+];
+function ls(k,d){try{var v=localStorage.getItem('bk_'+k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem('bk_'+k,JSON.stringify(v))}catch(e){}}
+var mine=ls('posts',[]), felt=ls('felt',{}), joined=ls('joined',['late']), extra=ls('extra',{});
+var state={room:'all',sort:'new',mineOnly:false,open:{}};
+var alias=pick(A1)+' '+pick(A2);
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function hash(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)}
+function ago(t){var m=Math.round((Date.now()-t)/6e4);if(m<1)return'just now';if(m<60)return m+'m ago';var h=Math.round(m/60);return h<24?h+'h ago':Math.round(h/24)+'d ago'}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('on')},1800)}
+function all(){return mine.concat(seed)}
+function felts(p){var s=0;for(var k in p.r)s+=p.r[k]+((felt[p.id]||{})[k]?1:0);return s}
+function roomOf(id){return ROOMS.filter(function(r){return r.id===id})[0]}
+
+function renderRooms(){
+  var h='<div class="row2"><button class="room" data-r="all" aria-pressed="'+(state.room==='all')+'"><span class="sw" style="background:var(--paper)"></span>Everything</button></div>';
+  ROOMS.forEach(function(r){
+    var n=all().filter(function(p){return p.room===r.id}).length, j=joined.indexOf(r.id)>-1;
+    h+='<div class="row2"><button class="room" data-r="'+r.id+'" aria-pressed="'+(state.room===r.id)+'"><span class="sw" style="background:var('+r.c+')"></span>'+r.n+'<small>'+n+'</small></button>'+
+       '<button class="join" data-j="'+r.id+'" aria-pressed="'+j+'" aria-label="'+(j?'Leave ':'Join ')+r.n+'">'+(j?'joined':'join')+'</button></div>';
+  });
+  $('rooms').innerHTML=h;
+}
+function renderBoard(fresh){
+  var list=all().filter(function(p){
+    if(state.room!=='all'&&p.room!==state.room)return false;
+    if(state.mineOnly&&joined.indexOf(p.room)<0)return false;
+    return true});
+  list.sort(function(a,b){return state.sort==='top'?felts(b)-felts(a):b.t-a.t});
+  if(!list.length){$('board').innerHTML='<p class="empty">Nothing pinned here yet. Be the first to write something.</p>';return}
+  $('board').innerHTML=list.map(function(p){
+    var r=roomOf(p.room), tilt=((hash(p.id)%7)-3)*.45, f=felt[p.id]||{}, cms=(p.c||[]).concat(extra[p.id]||[]);
+    var btns=KINDS.map(function(k){return '<button data-p="'+p.id+'" data-k="'+k[0]+'" aria-pressed="'+!!f[k[0]]+'">'+k[1]+' '+(p.r[k[0]]+(f[k[0]]?1:0))+'</button>'}).join('');
+    var th=state.open[p.id]?'<div class="thread">'+cms.map(function(c){return '<p class="cm"><b>'+esc(c.a)+'</b>'+esc(c.x)+'</p>'}).join('')+
+      '<form data-f="'+p.id+'"><input maxlength="140" placeholder="Reply as '+esc(alias)+'" aria-label="Write a reply"><button>Send</button></form></div>':'';
+    return '<article class="note'+(p.own?' mine':'')+(fresh===p.id?' drop':'')+'" style="--c:var('+r.c+');--r:'+tilt+'deg">'+
+      '<div class="meta"><b>'+esc(p.a)+'</b><span>'+ago(p.t)+'</span><span class="tag">'+r.n+'</span></div>'+
+      '<p>'+esc(p.text)+'</p><div class="react">'+btns+'<button class="talk" data-t="'+p.id+'" aria-expanded="'+!!state.open[p.id]+'">'+cms.length+' repl'+(cms.length===1?'y':'ies')+'</button></div>'+th+'</article>'}).join('');
+}
+function render(f){renderRooms();renderBoard(f)}
+
+$('room').innerHTML=ROOMS.map(function(r){return '<option value="'+r.id+'">'+r.n+'</option>'}).join('');
+$('alias').textContent=alias;
+$('txt').addEventListener('input',function(){var n=this.value.trim().length;$('cnt').textContent=this.value.length+'/280';$('pin').disabled=n<3});
+$('pin').addEventListener('click',function(){
+  var t=$('txt').value.trim();if(t.length<3)return;
+  var p={id:'u'+Date.now(),room:$('room').value,a:alias,t:Date.now(),text:t,r:{me:0,hug:0,ouch:0,haha:0},c:[],own:true};
+  mine.unshift(p);sv('posts',mine);
+  $('txt').value='';$('cnt').textContent='0/280';this.disabled=true;
+  alias=pick(A1)+' '+pick(A2);$('alias').textContent=alias;
+  state.room='all';state.sort='new';syncTabs();render(p.id);toast('Pinned. Nobody knows it’s you.');
+});
+function syncTabs(){document.querySelectorAll('.tab').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.s===state.sort)})}
+document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){state.sort=b.dataset.s;syncTabs();renderBoard()})});
+$('mineOnly').addEventListener('change',function(){state.mineOnly=this.checked;renderBoard()});
+$('rooms').addEventListener('click',function(e){
+  var j=e.target.closest('[data-j]'),r=e.target.closest('[data-r]');
+  if(j){var id=j.dataset.j,i=joined.indexOf(id);if(i>-1){joined.splice(i,1);toast('Left '+roomOf(id).n)}else{joined.push(id);toast('Joined '+roomOf(id).n)}sv('joined',joined);render()}
+  else if(r){state.room=r.dataset.r;if(state.room!=='all')$('room').value=state.room;render()}
+});
+$('board').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.k){var id=b.dataset.p;felt[id]=felt[id]||{};felt[id][b.dataset.k]=!felt[id][b.dataset.k];sv('felt',felt);
+    var y=window.scrollY;renderBoard();window.scrollTo(0,y)}
+  else if(b.dataset.t){state.open[b.dataset.t]=!state.open[b.dataset.t];renderBoard()}
+});
+$('board').addEventListener('submit',function(e){
+  e.preventDefault();var f=e.target,id=f.dataset.f,v=f.querySelector('input').value.trim();if(!v)return;
+  (extra[id]=extra[id]||[]).push({a:alias,x:v});sv('extra',extra);renderBoard();
+  var inp=document.querySelector('[data-f="'+id+'"] input');if(inp)inp.focus();
+});
+render();
+})();
+</script>
+</body>
+</html>
